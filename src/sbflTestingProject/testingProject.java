@@ -39,7 +39,6 @@ public class testingProject {
 				String line;
 				int i=0;
 				//Array that contains data about the tests
-				String[] fileInfo;
 				boolean testPass=false;
 				while ((line = reader.readLine()) != null) {
 					//get class name from first line
@@ -60,13 +59,11 @@ public class testingProject {
 					}
 					else if (!line.trim().isEmpty()) {
 						//Get Class and Method Name
-						//System.out.println(testPass);
 						String[] splitOnColon = line.split(":");
 						String methodName = splitOnColon[1];
 						String[] splitOnBackslash = splitOnColon[0].split("/");
 						String className = splitOnBackslash[splitOnBackslash.length-1];
-						//System.out.println("class: " + className);
-						//System.out.println("method: " + methodName);
+
 
 						//if class doesn't exist in hash map, add class to hash map with method
 						if (masterMethodList.get(className) == null) {
@@ -74,13 +71,11 @@ public class testingProject {
 							double[] initArray = new double [2];
 							newClassMethod.put(methodName, initArray);
 							masterMethodList.put(className, newClassMethod);
-							//System.out.println(masterMethodList.get(className).get(methodName)[0]);
 						}
 						//if class exists, but method does not add method to hash map 
 						else if(masterMethodList.get(className).get(methodName) == null){
 							double[] initArray = new double [2];
 							masterMethodList.get(className).put(methodName, initArray);
-							//System.out.println(masterMethodList.get(className).get(methodName)[0]);
 						}
 						//if class and method exists add one to pass ([0]) or fail ([1]) based on result
 						if (masterMethodList.get(className).get(methodName) != null) {
@@ -123,6 +118,7 @@ public class testingProject {
 			}
 		}
 		
+		//Sort the final list in descending order by Tarrantula Score
 		Collections.sort(finalList, new Comparator<LinkedList<Object>>(){
 			@Override
 			public int compare(LinkedList<Object> list1, LinkedList<Object> list2) {
@@ -144,7 +140,7 @@ public class testingProject {
 		
 		writer.println("Total Pass: " + totalPass);
 		writer.println("Total Fail: " + totalFail);
-		writer.println("test files set to 'fail': 4, 7, 21, 27, 32" );
+		writer.println("Test files set to 'fail': 4, 7, 21, 27, 32" );
 		writer.println("List ordered by Descending order of Tarantula Formula result: ");
 		for (LinkedList<Object> output : finalList) {
 			writer.println("=====");
@@ -167,19 +163,23 @@ public class testingProject {
 		writer.flush();
 		writer.close();
 	}
-
+	
+	//Tarantula Calculation
 	public static double calcTarantula(double methodFail, double totalFail, double methodPass, double totalPass) {  
 		return ((methodFail/totalFail)/((methodFail/totalFail)+(methodPass/totalPass)));
 	}
-
+	
+	//SBI Calculation
 	public static double calcSBI(double methodFail, double methodPass) {
 		return (methodFail/(methodFail + methodPass));
 	}
-
+	
+	//Jaccard Calculation
 	public static double calcJaccard(double methodFail, double totalFail, double methodPass) {
 		return (methodFail/(totalFail + methodPass));
 	}
 
+	//Ochiai Calculation
 	public static double calcOchiai(double methodFail, double totalFail, double methodPass) {
 		return (methodFail/Math.sqrt(totalFail *(methodPass + methodFail)));
 	}
