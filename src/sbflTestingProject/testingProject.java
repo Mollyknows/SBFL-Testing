@@ -30,7 +30,7 @@ public class testingProject {
 		ArrayList<String> filenames = new ArrayList<>();
 
 		
-
+		//Parse files for class and method data
 		Map<String, Map<String, double[]>> masterMethodList = new HashMap<>();
 		for (File file : files) {
 			System.out.println("\n--- Reading file: " + file.getName() + " ---");
@@ -45,8 +45,6 @@ public class testingProject {
 					if (i==0) {
 						String[] testInfo = line.split("[.]");
 						String[] testNameDetails = testInfo[testInfo.length-1].split(" ");
-
-						//System.out.println("testClassname: " + testInfo[testInfo.length-2] + " testname: " + testNameDetails[0] + " testpassed: " + testNameDetails[1]);
 						if (testNameDetails[1].contains("true")) {
 							testPass = true;
 							//increment total passing tests
@@ -91,7 +89,8 @@ public class testingProject {
 			} catch (IOException e) {
 				System.err.println("Error reading file " + file.getName() + ": " + e.getMessage());
 			}
-		}	
+		}
+		
 		ArrayList<LinkedList<Object>> finalList = new ArrayList<>();
 		//Calculate the 4 SBFL scores for each method and add them to a linked list sorted by Tarantula Score
 		for(String testedClass : masterMethodList.keySet()) {
@@ -103,17 +102,12 @@ public class testingProject {
 				currentList.add(testedMethod); //index 1
 				currentList.add(methodPass); //index 2
 				currentList.add(methodFail); //index 3
-				double tarantulaCalc = 0.0;
-				if (methodFail > 0) {
-					tarantulaCalc = calcTarantula(methodFail, totalFail, methodPass, totalPass); 
-				}
-				currentList.add(tarantulaCalc); //index 4
+				currentList.add(calcTarantula(methodFail, totalFail, methodPass, totalPass)); //index 4
 				currentList.add(calcSBI(methodFail, methodPass)); //index 5
 				currentList.add(calcJaccard(methodFail, totalFail, methodPass)); //index 6
 				currentList.add(calcOchiai(methodFail, totalFail, methodPass)); //index 7
 				
 				finalList.add(currentList);
-
 				
 			}
 		}
